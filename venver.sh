@@ -52,6 +52,33 @@ if [[ $ANYERROR == 1 ]] ; then
     tput setaf 1; tput bold; echo "errors encountered in environment variables"; tput sgr0
     echo "suggestion: add variables to /etc/environment"
 fi
+
+# Download release from github, delete previous files and replace them
+if [[ -n $1 ]]; then
+    GITHUB_SOURCE="https://github.com/ThePhisch/Scream/archive/refs/tags/"
+    DOWNLOAD_LINK="$GITHUB_SOURCE$1"
+    wget -O dload $DOWNLOAD_LINK
+    unzip dload
+    NAME_OF_FOLDER=$(ls -l | grep Scream- | awk '{print $NF}')
+    STUFF_TO_REPLACE=("wsgi.py" "spp/")
+    if [[ -n $NAME_OF_FOLDER ]]; then
+        tput bold; echo "The unzipped folder's name is $NAME_OF_FOLDER"; tput sgr0
+        for p in ${STUFF_TO_REPLACE[@]}; do
+            echo "Replacing $p"
+            rm -rf $p
+            mv $NAME_OF_FOLDER/$p $p
+        done
+        rm -rf $NAME_OF_FOLDER/
+    else
+        tput setaf 1; tput bold; echo "There was an issue with the download"; tput sgr0
+    fi
+    echo "Cleaning: removing dload"
+    rm dload
+else
+    echo "No Download command given, nothing downloaded or replaced"
+fi
+
+
 echo "done"
 
 # Now:
