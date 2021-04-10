@@ -1,2 +1,4 @@
-from spp import main
-main.test()
+from spp.main import app
+
+if __name__ == "main":
+    app.run()

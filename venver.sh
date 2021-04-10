@@ -53,3 +53,7 @@ if [[ $ANYERROR == 1 ]] ; then
     echo "suggestion: add variables to /etc/environment"
 fi
 echo "done"
+
+# Now:
+# Run with gunicorn, e.g. gunicorn wsgi:app
+# Connect gunicorn with Nginx

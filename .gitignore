@@ -2,3 +2,4 @@ workspace.code-workspace
 screamenv/
 spp/__pycache__/
 .vscode/
+__pycache__/
