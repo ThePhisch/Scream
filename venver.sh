@@ -114,7 +114,7 @@ if [[ -z $FLAG_VERSION_UPDATE ]]; then
     wget -O dload $DOWNLOAD_LINK
     unzip dload
     NAME_OF_FOLDER=$(ls -l | grep Scream- | awk '{print $NF}')
-    STUFF_TO_REPLACE=("wsgi.py" "spp/")
+    STUFF_TO_REPLACE=("wsgi.py" "spp/" "tests.py")
     if [[ -n $NAME_OF_FOLDER ]]; then
         tput bold; echo "The unzipped folder's name is $NAME_OF_FOLDER"; tput sgr0
         for p in ${STUFF_TO_REPLACE[@]}; do
