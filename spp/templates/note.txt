@@ -1,0 +1,10 @@
+Usually, templates should be put into the templates folder
+of the module, e.g.
+
+spp/start/templates/hello.html
+
+Templates that land in here override the blueprint template
+folder. Folder structure
+
+spp/templates/start/hello.html
+

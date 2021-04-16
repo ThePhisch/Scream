@@ -1,4 +1,6 @@
-from spp.main import app
+from spp import create_app
 
-if __name__ == "main":
-    app.run()
+app = create_app()
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0")
