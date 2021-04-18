@@ -4,3 +4,4 @@ spp/__pycache__/
 .vscode/
 __pycache__/
 scream.service
+migrations/

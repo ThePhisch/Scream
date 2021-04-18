@@ -1,10 +1,16 @@
 #!/bin/bash
 # Prepare environment for Scream
 GIVEN_VNAME="v0.1.zip"
+ENV_NAME="screamenv"
+
+db_setupfunc() {
+    echo "setting up db"
+}
+
 # Loop to process input
 while [[ -n $1 ]]; do # while loop
     case $1 in
-        -v)
+        -V)
             # Pass name of version to download
             GIVEN_VNAME="$2"
             echo "Will download version $GIVEN_VNAME"
@@ -35,6 +41,46 @@ while [[ -n $1 ]]; do # while loop
             # Suppress version update
             FLAG_VERSION_UPDATE=0
             ;; 
+        -sd)
+            # Suppress db
+            FLAG_DB_SETUP=0
+            ;;
+        --suppress)
+            # Long form
+            shift
+            case $1 in
+                linuxpackage)
+                    # Suppress linux package check 
+                    FLAG_LINUX_PACKAGE_CHECK=0
+                    ;;
+                venvcreation)
+                    # Suppress venv creation
+                    FLAG_VENV_CREATION=0
+                    ;;
+                pythonpackage)
+                    # Suppress python package check
+                    FLAG_PYTHON_PACKAGE_CHECK=0
+                    ;; 
+                pythonall)
+                    # sv and sp
+                    FLAG_VENV_CREATION=0
+                    FLAG_PYTHON_PACKAGE_CHECK=0
+                    ;; 
+                envvars)
+                    # Suppress environment vars
+                    FLAG_ENVIRONMENT_VARS=0
+                    ;;
+                versionupdate)
+                    # Suppress version update
+                    FLAG_VERSION_UPDATE=0
+                    ;; 
+                dbsetup)
+                    # suppress db
+                    FLAG_DB_SETUP=0
+                    ;;
+                *) echo "option $1 is not recognized" ;;
+            esac
+            ;;
         *) echo "option $1 not recognized" ;;
     esac
     shift
@@ -60,7 +106,6 @@ fi
 
 if [[ -z $FLAG_VENV_CREATION ]]; then
     # Create Venv
-    ENV_NAME="screamenv"
     echo "Create Virtual Environment with the name $ENV_NAME"
     python3 -m venv $ENV_NAME
 else
@@ -69,7 +114,7 @@ fi
 if [[ -z $FLAG_PYTHON_PACKAGE_CHECK ]]; then
     # Enter Venv, install pip packages
     # once done with venv, leave venv
-    PYTHON_PKGS=("Flask" "gunicorn" "wheel")
+    PYTHON_PKGS=("Flask" "gunicorn" "wheel" "flask-sqlalchemy" "python-dotenv" "flask-migrate" "pylint-flask-sqlalchemy")
     echo "entering $ENV_NAME, installing pip packages"
     source $ENV_NAME/bin/activate
     for p in "${PYTHON_PKGS[@]}"; do
@@ -132,6 +177,11 @@ else
     echo "No Download command given, nothing downloaded or replaced"
 fi
 
+if [[ -z $FLAG_DB_SETUP ]]; then
+    db_setupfunc
+else
+    echo "Skipping db setup"
+fi
 
 echo "done"
 
