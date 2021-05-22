@@ -5,6 +5,9 @@
 <h1>Login</h1>
 <form action="" method="post" novalidate>
     {{ form.hidden_tag() }}
+    {% if failedAttempt %}
+    <p>Login failed. Try again.</p>
+    {% endif %}
     <p>
         {{ form.username.label }} <br>
         {{ form.username() }}
