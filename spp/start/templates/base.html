@@ -1,0 +1,16 @@
+<html>
+    <head>
+        {% if title %}
+        <title>{{ title }} - Screamsocial</title>
+        {% else %}
+        <title> Screamsocial </title>
+        {% endif %}
+    </head>
+    <body>
+        <div>Screamsocial: <a href="">Home</a></div>
+        <hr>
+        {% block content %}
+        
+        {% endblock content %}
+    </body>
+</html>
