@@ -1,7 +1,7 @@
 from flask import render_template
 from flask.helpers import url_for
 from flask_login import current_user, login_user
-from flask_login.utils import logout_user
+from flask_login.utils import login_required, logout_user
 from werkzeug.utils import redirect
 from spp.start import bp
 from spp.start.forms import LoginForm, RegistrationForm
@@ -44,3 +44,15 @@ def register():
         db.session.commit()
         return redirect(url_for("start.login"))
     return render_template("register.html", title="Register", form=form)
+
+@bp.route("/account")
+@login_required
+def account():
+    return render_template("account.html") 
+
+@bp.route("/deleteaccount")
+@login_required
+def delete_account():
+    User.query.filter(User.id == current_user.id).delete()
+    db.session.commit()
+    return redirect(url_for("start.index"))
