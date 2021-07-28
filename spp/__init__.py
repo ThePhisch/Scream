@@ -18,6 +18,8 @@ def create_app(config_class=Config):
     login.init_app(app)
 
     from spp.start import bp as starter_bp
+    from spp.chat import bp as chatter_bp
     app.register_blueprint(starter_bp)
+    app.register_blueprint(chatter_bp)
 
     return app

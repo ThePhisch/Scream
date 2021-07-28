@@ -1,0 +1,22 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Chatroom (:</h1>
+<hr>
+
+<form action="" method="POST">
+    {{ form.hidden_tag() }}
+    <p>
+        {{form.post.label}}
+        {{form.post(cols=32, rows=4)}}
+        {% for error in form.post.errors %}
+            <span style="color: red;">[{{error}}]</span>
+        {% endfor %}
+    </p>
+    <p>{{ form.submit() }}</p>
+</form>
+
+
+{% endblock%}

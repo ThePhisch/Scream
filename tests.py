@@ -25,8 +25,10 @@ class PrimaryTests(unittest.TestCase):
 
     def test_Unauthorised(self):
         tester = self.app.test_client()
-        response = tester.get("/account", content_type="html/text")
-        self.assertTrue(b"Unauthorized" in response.data)
+        response = tester.get("/account",
+                              content_type="html/text",
+                              follow_redirects=True)
+        self.assertTrue(b"Unauthorised" in response.data)
 
     def test_logout_not_logged_in(self):
         # TODO THIS WILL ~~ALWAYS~~ PASS, rework the test
@@ -50,11 +52,10 @@ class PrimaryTests(unittest.TestCase):
             data={"username": uname, "password": upass},
             follow_redirects=True
         )
-        self.assertTrue(b"login succeeded" in response.data)
+        self.assertTrue(b"bernd" in response.data)
         with self.app.app_context():
             db.session.delete(user)
             db.session.commit()
-
 
         response = tester.post(
             "/login",
@@ -62,6 +63,7 @@ class PrimaryTests(unittest.TestCase):
             follow_redirects=True
         )
         self.assertTrue(b"Login failed. Try again." in response.data)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

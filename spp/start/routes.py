@@ -31,7 +31,7 @@ def login():
         if user is None or not user.check_password(form.password.data):
             return render_template("login.html", title="Login", form=form, failedAttempt=True)
         login_user(user)
-        return "login succeeded <a href='/'>index</a>"
+        return redirect(url_for("start.index")) 
     return render_template("login.html", title="Login", form=form)
 
 
