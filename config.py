@@ -8,3 +8,4 @@ class Config():
     DATABASE_USER = os.environ.get('DB_USER')
     DATABASE_PASS = os.environ.get('DB_PASS')
     SECRET_KEY = os.environ.get("SECRET_KEY") or "you-will-never-guess"
+    TIMEFORMAT = "%H:%M:%S"

@@ -18,7 +18,7 @@
     <p>{{ form.submit() }}</p>
     {% for room in rooms %}
     <p>
-        {{ room.name }} by {{ room.owner_name }}
+        <a href="/chat/{{ room.name }}">{{ room.name }}</a> by {{ room.owner_name }}
     </p>
     {% endfor %}
 </form>
