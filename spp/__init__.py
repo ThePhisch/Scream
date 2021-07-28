@@ -7,6 +7,7 @@ from config import Config
 db = SQLAlchemy()
 migrate = Migrate()
 login = LoginManager()
+login.login_view = "start.unauthorised"
 
 def create_app(config_class=Config):
     app = Flask(__name__)

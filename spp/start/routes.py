@@ -16,24 +16,40 @@ def index():
 
 @bp.route("/login", methods=["GET", "POST"])
 def login():
+    """
+    Logging in the user.
+    -> Returns back to index if already authenticated
+    -> loads again upon submitting
+        -> logs in if appropriate, returns success
+        -> return login page with a failed attempt mention otherwise
+    """
     if current_user.is_authenticated:
         return redirect(url_for("start.index"))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
-            return render_template("login.html", title="Login", form=form, failedAttempt = True) 
+            return render_template("login.html", title="Login", form=form, failedAttempt=True)
         login_user(user)
         return "login succeeded <a href='/'>index</a>"
     return render_template("login.html", title="Login", form=form)
 
+
 @bp.route("/logout")
 def logout():
+    """
+    Logs out the user.
+    Brings user back to index.
+    """
     logout_user()
     return redirect(url_for("start.index"))
 
+
 @bp.route("/register", methods=["GET", "POST"])
 def register():
+    """
+    Register the user.
+    """
     if current_user.is_authenticated:
         return redirect(url_for("start.index"))
     form = RegistrationForm()
@@ -45,10 +61,12 @@ def register():
         return redirect(url_for("start.login"))
     return render_template("register.html", title="Register", form=form)
 
+
 @bp.route("/account")
 @login_required
 def account():
-    return render_template("account.html") 
+    return render_template("account.html")
+
 
 @bp.route("/deleteaccount")
 @login_required
@@ -56,3 +74,7 @@ def delete_account():
     User.query.filter(User.id == current_user.id).delete()
     db.session.commit()
     return redirect(url_for("start.index"))
+
+@bp.route("/unauthorised")
+def unauthorised():
+    return render_template("unauthorised.html")
