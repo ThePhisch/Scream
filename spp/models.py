@@ -23,10 +23,12 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(300))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    author = db.Column(db.Integer, db.ForeignKey("user.id"))
+    author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    author_name = db.Column(db.String(60))
+
 
     def __repr__(self) -> str:
-        return f'<Post {self.id} by {self.author}>'
+        return f'<Post {self.id} by {self.author_name}>'
 
     def __str__(self) -> str:
         return f'<Post {self.body}>'

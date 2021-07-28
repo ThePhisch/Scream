@@ -16,6 +16,11 @@
         {% endfor %}
     </p>
     <p>{{ form.submit() }}</p>
+    {% for post in posts %}
+    <p>
+    {{ post.author_name }} [{{time_reformatter(post.timestamp)}}] -> <b> {{ post.body }} </b> 
+    </p>
+    {% endfor %}
 </form>
 
 
