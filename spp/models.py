@@ -33,6 +33,18 @@ class Post(db.Model):
     def __str__(self) -> str:
         return f'<Post {self.body}>'
 
+class Room(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(60))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    owner_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    owner_name = db.Column(db.String(60))
+
+    def __repr__(self):
+        return f'<Room {self.id} by {self.owner_id}>'
+
+    def __str__(self):
+        return f'<Room {self.name} by {self.owner_name}>'
 
 @login.user_loader
 def load_user(id):
