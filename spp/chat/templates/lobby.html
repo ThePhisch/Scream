@@ -16,11 +16,27 @@
         {% endfor %}
     </p>
     <p>{{ form.submit() }}</p>
-    {% for room in rooms %}
+
+    <div>
+    <h3>Your rooms</h3>
+    {% for room in my_rooms %}
     <p>
-        <a href="/chat/{{ room.name }}">{{ room.name }}</a> by {{ room.owner_name }}
+        <a href="/chat/{{ room.name }}">{{ room.name }}</a> by <em>you</em>.
+        <a href="/chat/{{ room.name }}/close">Close room</a>
     </p>
     {% endfor %}
+    </div>
+
+
+
+    <div>
+    <h3>Other rooms</h3>
+    {% for room in other_rooms %}
+    <p>
+        <a href="/chat/{{ room.name }}">{{ room.name }}</a> by {{ room.owner_name }}.
+    </p>
+    {% endfor %}
+    </div>
 </form>
 
 

@@ -37,6 +37,11 @@ class Post(db.Model):
     def get_time(self) -> str:
         return self.timestamp.strftime(current_app.config['TIMEFORMAT'])
 
+    def delete(self) -> None:
+        Post.query.filter_by(id=self.id).delete()
+        db.session.commit()
+
+
 
 class Room(db.Model):
     name = db.Column(db.String(60), primary_key=True)
@@ -52,6 +57,18 @@ class Room(db.Model):
 
     def get_time(self) -> str:
         return self.timestamp.strftime(current_app.config['TIMEFORMAT'])
+
+    def closeroom(self) -> None:
+        allposts = self.get_all_posts()
+        print(allposts)
+        for post in allposts:
+            post.delete()
+        Room.query.filter_by(name=self.name).delete()
+        db.session.commit()
+
+
+    def get_all_posts(self) -> list:
+        return Post.query.filter_by(room_name=self.name).all()
 
 
 @login.user_loader

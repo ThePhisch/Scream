@@ -8,6 +8,13 @@ from flask_login import current_user, logout_user
 
 
 class PrimaryTests(unittest.TestCase):
+
+    def __init__(self, methodName: str) -> None:
+        super().__init__(methodName=methodName)
+
+        self.uname = "bernd"
+        self.upass = "das_brot"
+
     def setUp(self):
         self.app = create_app()
         # Necessary for filling in the forms automatically
@@ -16,50 +23,78 @@ class PrimaryTests(unittest.TestCase):
             db.create_all()
 
     def tearDown(self):
-        pass
+        with self.app.app_context():
+            User.query.filter(User.username == self.uname).delete() # delete test user
+            db.session.commit()
 
-    def test_Start(self):
+    def test_main_not_logged_in(self):
+        """
+        Test all the pages inside of the start module
+        for their behaviour should an unauthorised user
+        try to visit them
+        -> /
+        -> /logout
+        -> /account
+        -> /login
+        -> /register
+        """
         tester = self.app.test_client()
-        response = tester.get('/', content_type="html/text")
-        self.assertTrue(b"Yay." in response.data)
-
-    def test_Unauthorised(self):
-        tester = self.app.test_client()
-        response = tester.get("/account",
+        response = tester.get("/",
                               content_type="html/text",
                               follow_redirects=True)
-        self.assertTrue(b"Unauthorised" in response.data)
-
-    def test_logout_not_logged_in(self):
-        # TODO THIS WILL ~~ALWAYS~~ PASS, rework the test
-        tester = self.app.test_client()
+        self.assertTrue(
+            b"Welcome to Screamsocial" in response.data)
         response = tester.get("/logout",
                               content_type="html/text",
                               follow_redirects=True)
         self.assertTrue(
             b"Yay." in response.data)
+        response = tester.get("/account",
+                              content_type="html/text",
+                              follow_redirects=True)
+        self.assertTrue(
+            b"Unauthorised!" in response.data)
+        response = tester.get("/login",
+                              content_type="html/text",
+                              follow_redirects=True)
+        self.assertTrue(
+            b"Login" in response.data and
+            b"Username" in response.data)
+        response = tester.get("/register",
+                              content_type="html/text",
+                              follow_redirects=True)
+        self.assertTrue(
+            b"Register" in response.data and
+            b"Repeat Password" in response.data)
 
     def test_login(self):
-        uname, upass = "bernd", "das_brot"
-        user = User(username=uname)
-        user.set_password(upass)
+        """
+        Test login functionality. Creates a test user (bernd, das_brot)
+        for test purposes, this user is later deleted (by the teardown
+        function).
+        """
+        user = User(username=self.uname)
+        user.set_password(self.upass)
         with self.app.app_context():
             db.session.add(user)
             db.session.commit()
         tester = self.app.test_client()
         response = tester.post(
             "/login",
-            data={"username": uname, "password": upass},
+            data={"username": self.uname, "password": self.upass},
             follow_redirects=True
         )
         self.assertTrue(b"bernd" in response.data)
-        with self.app.app_context():
-            db.session.delete(user)
-            db.session.commit()
 
+    def test_fail_login(self):
+        """
+        Try to logon with the test user, but the test user
+        is not registered. Login should fail.
+        """
+        tester = self.app.test_client()
         response = tester.post(
             "/login",
-            data={"username": uname, "password": upass},
+            data={"username": self.uname, "password": self.upass},
             follow_redirects=True
         )
         self.assertTrue(b"Login failed. Try again." in response.data)
