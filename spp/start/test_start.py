@@ -1,26 +1,19 @@
 import unittest
 from spp import create_app
 
-from spp import db
+from spp import db, test_parent
 from spp.models import User
 
 from flask_login import current_user, logout_user
 
 
-class PrimaryTests(unittest.TestCase):
+class PrimaryTests(test_parent.sppTester):
 
     def __init__(self, methodName: str) -> None:
         super().__init__(methodName=methodName)
 
         self.uname = "bernd"
         self.upass = "das_brot"
-
-    def setUp(self):
-        self.app = create_app()
-        # Necessary for filling in the forms automatically
-        self.app.config['WTF_CSRF_ENABLED'] = False
-        with self.app.app_context():
-            db.create_all()
 
     def tearDown(self):
         with self.app.app_context():
@@ -84,7 +77,7 @@ class PrimaryTests(unittest.TestCase):
             data={"username": self.uname, "password": self.upass},
             follow_redirects=True
         )
-        self.assertTrue(b"bernd" in response.data)
+        self.assertTrue(b"Logged in as bernd" in response.data)
 
     def test_fail_login(self):
         """

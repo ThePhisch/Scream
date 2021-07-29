@@ -50,7 +50,7 @@ class Room(db.Model):
     owner_name = db.Column(db.String(60))
 
     def __repr__(self):
-        return f'<Room {self.id} by {self.owner_id}>'
+        return f'<Room {self.name} by {self.owner_id}>'
 
     def __str__(self):
         return f'<Room {self.name} by {self.owner_name}>'
