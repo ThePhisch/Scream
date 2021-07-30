@@ -114,7 +114,7 @@ fi
 if [[ -z $FLAG_PYTHON_PACKAGE_CHECK ]]; then
     # Enter Venv, install pip packages
     # once done with venv, leave venv
-    PYTHON_PKGS=("Flask" "gunicorn" "wheel" "flask-sqlalchemy" "python-dotenv" "flask-migrate" "pylint-flask-sqlalchemy" "flask-login" "flask-wtf" "flask-moment")
+    PYTHON_PKGS=("Flask" "gunicorn" "wheel" "flask-sqlalchemy" "python-dotenv" "flask-migrate" "pylint-flask-sqlalchemy" "flask-login" "flask-wtf" "flask-moment" "flask-socketio")
     echo "entering $ENV_NAME, installing pip packages"
     source $ENV_NAME/bin/activate
     for p in "${PYTHON_PKGS[@]}"; do

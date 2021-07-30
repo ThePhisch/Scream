@@ -8,7 +8,22 @@ from spp.chat.forms import PostForm, RoomForm
 from spp import db
 from spp.models import Post, Room, User
 from datetime import datetime
+from flask_socketio import send
+from spp import socketio
 
+@bp.route('/testchat', methods=["GET", "POST"])
+@login_required
+def socketchat():
+    # TEST PURPOSES ONLY
+    # TODO migrate to regular chatroom
+    return render_template("socketchat.html")
+
+@socketio.on('message')
+def handleMessage(msg):
+    # TEST PURPOSES ONLY
+    # TODO limit scope (currently broadcasts to everyone)
+    print(f"Message: {msg}")
+    send(msg, broadcast=True)
 
 @bp.route('/chat/<room>', methods=["GET", "POST"])
 @login_required
